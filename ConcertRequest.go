@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -33,6 +32,14 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 }
 
 func readConcertsInArea(area string, apiKey string, artistSlice []Artist) []Concert {
+	return getConcerts(area, apiKey, artistSlice)
+}
+
+func readConcertsInAreaByUser(area string, apiKey string, artistSlice []Artist, c chan []Concert) {
+	c <- getConcerts(area, apiKey, artistSlice)
+}
+
+func getConcerts(area string, apiKey string, artistSlice []Artist) []Concert {
 	c := make(chan []byte)
 
 	count := 0
@@ -88,10 +95,6 @@ func readConcertsInArea(area string, apiKey string, artistSlice []Artist) []Conc
 			}
 		}
 	}
-
-	sort.Slice(concertArray, func(i, j int) bool {
-		return concertArray[i].Date.Before(concertArray[j].Date)
-	})
 
 	return concertArray
 }

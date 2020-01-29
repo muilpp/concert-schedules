@@ -18,7 +18,7 @@ func isBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
 	return false
 }
 
-func getSongKickApiKey() string {
+func getSongKickAPIKey() string {
 	bs, err := ioutil.ReadFile("SongKickApiKey.txt")
 
 	if err != nil {
@@ -29,7 +29,7 @@ func getSongKickApiKey() string {
 	return string(bs)
 }
 
-func getLastFMApiKey() string {
+func getLastFMAPIKey() string {
 	bs, err := ioutil.ReadFile("LastFMApiKey.txt")
 
 	if err != nil {
