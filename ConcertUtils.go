@@ -39,3 +39,23 @@ func getLastFMAPIKey() string {
 
 	return string(bs)
 }
+
+func getConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []Artist) []Concert {
+	concertChannel := make(chan []Concert)
+	for _, skArea := range skAreaSlice {
+		go readConcertsInAreaByUser(skArea, songKickAPIKey, artists, concertChannel)
+	}
+
+	var concerts []Concert
+	for i := 0; i < len(skAreaSlice); i++ {
+		newConcerts := <-concertChannel
+
+		for _, concert := range newConcerts {
+			if !isBandAlreadyInSlice(concerts, concert.Artist) {
+				concerts = append(concerts, concert)
+			}
+		}
+	}
+
+	return concerts
+}
