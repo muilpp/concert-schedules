@@ -59,3 +59,20 @@ func getConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []A
 
 	return concerts
 }
+
+func removeDuplicateEvents(concerts []Concert, concertsToAdd []Concert) []Concert {
+	for _, concertUser2 := range concertsToAdd {
+		isConcertInList := false
+		for _, concertUser1 := range concerts {
+			if concertUser1.Artist == concertUser2.Artist {
+				isConcertInList = true
+			}
+		}
+
+		if !isConcertInList {
+			concerts = append(concerts, concertUser2)
+		}
+	}
+
+	return concerts
+}

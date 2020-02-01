@@ -28,7 +28,7 @@ func main() {
 	r.GET("/allConcerts/:user", func(c *gin.Context) {
 		artists := getMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
 		//TODO Read this from file or database
-		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540"}
+		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
 		concerts := getConcertsForUser(skAreaSlice, songKickAPIKey, artists)
 
@@ -43,16 +43,18 @@ func main() {
 		artistsUser1 := getMostListenedArtists(c.Param("user1"), lastFMAPIKey, c.Query("limit"))
 		artistsUser2 := getMostListenedArtists(c.Param("user2"), lastFMAPIKey, c.Query("limit"))
 		//TODO Read this from file or database
-		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540"}
+		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
-		concerts := getConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser1)
-		concerts = append(concerts, getConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser2)...)
+		allConcerts := getConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser1)
+		concertsSecondUser := getConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser2)
 
-		sort.Slice(concerts, func(i, j int) bool {
-			return concerts[i].Date.Before(concerts[j].Date)
+		allConcerts = removeDuplicateEvents(allConcerts, concertsSecondUser)
+
+		sort.Slice(allConcerts, func(i, j int) bool {
+			return allConcerts[i].Date.Before(allConcerts[j].Date)
 		})
 
-		c.JSON(http.StatusOK, concerts)
+		c.JSON(http.StatusOK, allConcerts)
 	})
 
 	r.Run(":8282")
