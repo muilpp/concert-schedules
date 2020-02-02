@@ -24,6 +24,10 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 
 	req, err := http.NewRequest("GET", Url.String(), nil)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	resp, err := client.Do(req)
 
 	if err != nil {
@@ -61,6 +65,7 @@ func getConcerts(area string, apiKey string, artistSlice []Artist) []Concert {
 	var concertArray []Concert
 	for i := 0; i < 20; i++ {
 		var response = <-c
+		log.Printf("Mida response %v", len(response))
 		if len(response) == 0 {
 			//Got until the last request
 			break
