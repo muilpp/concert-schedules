@@ -22,6 +22,8 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 	parameters.Add("page", page)
 	Url.RawQuery = parameters.Encode()
 
+	log.Println(Url.String())
+
 	req, err := http.NewRequest("GET", Url.String(), nil)
 
 	if err != nil {
