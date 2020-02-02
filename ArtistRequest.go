@@ -11,7 +11,17 @@ import (
 func getMostListenedArtists(user string, apiKey string, limit string) []Artist {
 	client := http.Client{}
 
-	req, err := http.NewRequest("GET", "http://ws.audioscrobbler.com/2.0/?method="+url.PathEscape("user.gettopartists")+"&user="+user+"&api_key="+apiKey+"&format=json&limit="+limit, nil)
+	Url, err := url.Parse("http://ws.audioscrobbler.com")
+	Url.Path += "/2.0/"
+	parameters := url.Values{}
+	parameters.Add("method", "user.gettopartists")
+	parameters.Add("user", user)
+	parameters.Add("api_key", apiKey)
+	parameters.Add("format", "json")
+	parameters.Add("limit", limit)
+	Url.RawQuery = parameters.Encode()
+
+	req, err := http.NewRequest("GET", Url.String(), nil)
 
 	if err != nil {
 		log.Println(err)
@@ -21,6 +31,7 @@ func getMostListenedArtists(user string, apiKey string, limit string) []Artist {
 	resp, err := client.Do(req)
 
 	if err != nil {
+		log.Println(err)
 		log.Fatal("Error getting most listened artists")
 	}
 
