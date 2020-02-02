@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -13,7 +14,16 @@ import (
 
 func requestConcertsInArea(area string, apiKey string, page string, c chan []byte) {
 	client := http.Client{}
-	req, err := http.NewRequest("GET", "https://api.songkick.com/api/3.0/metro_areas/"+area+"/calendar.json?apikey="+apiKey+"&page="+page, nil)
+
+	Url, err := url.Parse("https://api.songkick.com")
+	Url.Path += "/api/3.0/metro_areas/" + area + "/calendar.json"
+	parameters := url.Values{}
+	parameters.Add("apikey", apiKey)
+	parameters.Add("page", page)
+	Url.RawQuery = parameters.Encode()
+
+	req, err := http.NewRequest("GET", Url.String(), nil)
+
 	resp, err := client.Do(req)
 
 	if err != nil {
