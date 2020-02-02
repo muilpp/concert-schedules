@@ -16,7 +16,7 @@ func main() {
 	r.Use(cors.Default())
 	r.GET("/concerts/:area/:user", func(c *gin.Context) {
 		artists := getMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
-		concerts := readConcertsInArea(c.Param("area"), songKickAPIKey, artists)
+		concerts := readConcertsInArea(c.Param("area"), lastFMAPIKey, artists)
 
 		sort.Slice(concerts, func(i, j int) bool {
 			return concerts[i].Date.Before(concerts[j].Date)
