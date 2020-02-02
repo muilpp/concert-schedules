@@ -15,7 +15,7 @@ import (
 func requestConcertsInArea(area string, apiKey string, page string, c chan []byte) {
 	client := http.Client{}
 
-	Url, err := url.Parse("https://api.songkick.com")
+	Url, err := url.Parse("http://api.songkick.com")
 	Url.Path += "/api/3.0/metro_areas/" + area + "/calendar.json"
 	parameters := url.Values{}
 	parameters.Add("apikey", apiKey)
