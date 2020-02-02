@@ -22,9 +22,6 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 	parameters.Add("page", page)
 	Url.RawQuery = parameters.Encode()
 
-	log.Printf("Path -> %v", Url.Path)
-	log.Printf("Raw query -> %v", Url.RawQuery)
-	log.Printf("URL -> %v", Url.String())
 	req, err := http.NewRequest("GET", Url.String(), nil)
 
 	if err != nil {
@@ -68,7 +65,7 @@ func getConcerts(area string, apiKey string, artistSlice []Artist) []Concert {
 	var concertArray []Concert
 	for i := 0; i < 20; i++ {
 		var response = <-c
-		log.Printf("Mida response %v", len(response))
+
 		if len(response) == 0 {
 			//Got until the last request
 			break

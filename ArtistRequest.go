@@ -21,7 +21,6 @@ func getMostListenedArtists(user string, apiKey string, limit string) []Artist {
 	parameters.Add("limit", limit)
 	Url.RawQuery = parameters.Encode()
 
-	log.Println(Url.String())
 	req, err := http.NewRequest("GET", Url.String(), nil)
 
 	if err != nil {
