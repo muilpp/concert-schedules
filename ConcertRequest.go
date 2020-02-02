@@ -21,7 +21,8 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 	log.Printf("Api key -> %v", apiKey)
 	parameters.Add("apikey", apiKey)
 	parameters.Add("page", page)
-	Url.RawQuery = parameters.Encode()
+	Url.RawQuery = "apikey=" + apiKey + "&page=" + page
+	// parameters.Encode()
 
 	log.Println(Url.String())
 
