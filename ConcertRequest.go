@@ -18,14 +18,13 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 	Url, err := url.Parse("https://api.songkick.com")
 	Url.Path += "/api/3.0/metro_areas/" + area + "/calendar.json"
 	parameters := url.Values{}
-	log.Printf("Api key -> %v", apiKey)
 	parameters.Add("apikey", apiKey)
 	parameters.Add("page", page)
-	Url.RawQuery = "apikey=" + apiKey + "&page=" + page
-	// parameters.Encode()
+	Url.RawQuery = parameters.Encode()
 
-	log.Println(Url.String())
-
+	log.Printf("Path -> %v", Url.Path)
+	log.Printf("Raw query -> %v", Url.RawQuery)
+	log.Printf("URL -> %v", Url.String())
 	req, err := http.NewRequest("GET", Url.String(), nil)
 
 	if err != nil {
