@@ -26,7 +26,7 @@ func getSongKickAPIKey() string {
 		os.Exit(1)
 	}
 
-	return string(bs)
+	return strings.TrimSpace(string(bs))
 }
 
 func getLastFMAPIKey() string {
@@ -37,7 +37,7 @@ func getLastFMAPIKey() string {
 		os.Exit(1)
 	}
 
-	return string(bs)
+	return strings.TrimSpace(string(bs))
 }
 
 func getConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []Artist) []Concert {
