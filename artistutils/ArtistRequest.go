@@ -1,4 +1,4 @@
-package main
+package artistutils
 
 import (
 	"encoding/json"
@@ -8,20 +8,20 @@ import (
 	"net/url"
 )
 
-func getMostListenedArtists(user string, apiKey string, limit string) []Artist {
+func GetMostListenedArtists(user string, apiKey string, limit string) []Artist {
 	client := http.Client{}
 
-	Url, err := url.Parse("http://ws.audioscrobbler.com")
-	Url.Path += "/2.0/"
+	URL, err := url.Parse("http://ws.audioscrobbler.com")
+	URL.Path += "/2.0/"
 	parameters := url.Values{}
 	parameters.Add("method", "user.gettopartists")
 	parameters.Add("user", user)
 	parameters.Add("api_key", apiKey)
 	parameters.Add("format", "json")
 	parameters.Add("limit", limit)
-	Url.RawQuery = parameters.Encode()
+	URL.RawQuery = parameters.Encode()
 
-	req, err := http.NewRequest("GET", Url.String(), nil)
+	req, err := http.NewRequest("GET", URL.String(), nil)
 
 	if err != nil {
 		log.Println(err)

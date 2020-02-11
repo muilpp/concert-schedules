@@ -1,6 +1,8 @@
 package main
 
 import (
+	"concert-schedules/artistutils"
+	"concert-schedules/concertutils"
 	"net/http"
 	"sort"
 
@@ -9,14 +11,14 @@ import (
 )
 
 func main() {
-	songKickAPIKey := getSongKickAPIKey()
-	lastFMAPIKey := getLastFMAPIKey()
+	songKickAPIKey := concertutils.GetSongKickAPIKey()
+	lastFMAPIKey := concertutils.GetLastFMAPIKey()
 
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/concerts/:area/:user", func(c *gin.Context) {
-		artists := getMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
-		concerts := readConcertsInArea(c.Param("area"), songKickAPIKey, artists)
+		artists := artistutils.GetMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
+		concerts := concertutils.ReadConcertsInArea(c.Param("area"), songKickAPIKey, artists)
 
 		sort.Slice(concerts, func(i, j int) bool {
 			return concerts[i].Date.Before(concerts[j].Date)
@@ -26,11 +28,11 @@ func main() {
 	})
 
 	r.GET("/allConcerts/:user", func(c *gin.Context) {
-		artists := getMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
+		artists := artistutils.GetMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
 		//TODO Read this from file or database
 		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
-		concerts := getConcertsForUser(skAreaSlice, songKickAPIKey, artists)
+		concerts := concertutils.GetConcertsForUser(skAreaSlice, songKickAPIKey, artists)
 
 		sort.Slice(concerts, func(i, j int) bool {
 			return concerts[i].Date.Before(concerts[j].Date)
@@ -40,15 +42,15 @@ func main() {
 	})
 
 	r.GET("/allConcertsAllUsers/:user1/:user2", func(c *gin.Context) {
-		artistsUser1 := getMostListenedArtists(c.Param("user1"), lastFMAPIKey, c.Query("limit"))
-		artistsUser2 := getMostListenedArtists(c.Param("user2"), lastFMAPIKey, c.Query("limit"))
+		artistsUser1 := artistutils.GetMostListenedArtists(c.Param("user1"), lastFMAPIKey, c.Query("limit"))
+		artistsUser2 := artistutils.GetMostListenedArtists(c.Param("user2"), lastFMAPIKey, c.Query("limit"))
 		//TODO Read this from file or database
 		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
-		allConcerts := getConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser1)
-		concertsSecondUser := getConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser2)
+		allConcerts := concertutils.GetConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser1)
+		concertsSecondUser := concertutils.GetConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser2)
 
-		allConcerts = removeDuplicateEvents(allConcerts, concertsSecondUser)
+		allConcerts = concertutils.RemoveDuplicateEvents(allConcerts, concertsSecondUser)
 
 		sort.Slice(allConcerts, func(i, j int) bool {
 			return allConcerts[i].Date.Before(allConcerts[j].Date)

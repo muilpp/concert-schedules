@@ -1,4 +1,4 @@
-package main
+package artistutils
 
 type ArtistDTO struct {
 	Topartists Topartists `json:"topartists"`

@@ -1,4 +1,4 @@
-package main
+package concertutils
 
 //JSONResponseA aa
 type JSONResponse struct {

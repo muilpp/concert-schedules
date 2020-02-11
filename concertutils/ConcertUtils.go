@@ -1,13 +1,14 @@
-package main
+package concertutils
 
 import (
+	"concert-schedules/artistutils"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 )
 
-func isBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
+func IsBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
 
 	for _, concert := range concertSlice {
 		if strings.EqualFold(concert.Artist, bandName) {
@@ -18,7 +19,7 @@ func isBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
 	return false
 }
 
-func getSongKickAPIKey() string {
+func GetSongKickAPIKey() string {
 	bs, err := ioutil.ReadFile("SongKickApiKey.txt")
 
 	if err != nil {
@@ -29,7 +30,7 @@ func getSongKickAPIKey() string {
 	return strings.TrimSpace(string(bs))
 }
 
-func getLastFMAPIKey() string {
+func GetLastFMAPIKey() string {
 	bs, err := ioutil.ReadFile("LastFMApiKey.txt")
 
 	if err != nil {
@@ -40,10 +41,10 @@ func getLastFMAPIKey() string {
 	return strings.TrimSpace(string(bs))
 }
 
-func getConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []Artist) []Concert {
+func GetConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []artistutils.Artist) []Concert {
 	concertChannel := make(chan []Concert)
 	for _, skArea := range skAreaSlice {
-		go readConcertsInAreaByUser(skArea, songKickAPIKey, artists, concertChannel)
+		go ReadConcertsInAreaByUser(skArea, songKickAPIKey, artists, concertChannel)
 	}
 
 	var concerts []Concert
@@ -51,7 +52,7 @@ func getConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []A
 		newConcerts := <-concertChannel
 
 		for _, concert := range newConcerts {
-			if !isBandAlreadyInSlice(concerts, concert.Artist) {
+			if !IsBandAlreadyInSlice(concerts, concert.Artist) {
 				concerts = append(concerts, concert)
 			}
 		}
@@ -60,7 +61,7 @@ func getConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []A
 	return concerts
 }
 
-func removeDuplicateEvents(concerts []Concert, concertsToAdd []Concert) []Concert {
+func RemoveDuplicateEvents(concerts []Concert, concertsToAdd []Concert) []Concert {
 	for _, concertUser2 := range concertsToAdd {
 		isConcertInList := false
 		for _, concertUser1 := range concerts {

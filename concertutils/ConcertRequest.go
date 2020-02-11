@@ -1,8 +1,8 @@
-package main
+package concertutils
 
 import (
+	"concert-schedules/artistutils"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-func requestConcertsInArea(area string, apiKey string, page string, c chan []byte) {
+func RequestConcertsInArea(area string, apiKey string, page string, c chan []byte) {
 	client := http.Client{}
 
 	Url, err := url.Parse("https://api.songkick.com")
@@ -45,20 +45,20 @@ func requestConcertsInArea(area string, apiKey string, page string, c chan []byt
 	c <- response
 }
 
-func readConcertsInArea(area string, apiKey string, artistSlice []Artist) []Concert {
-	return getConcerts(area, apiKey, artistSlice)
+func ReadConcertsInArea(area string, apiKey string, artistSlice []artistutils.Artist) []Concert {
+	return GetConcerts(area, apiKey, artistSlice)
 }
 
-func readConcertsInAreaByUser(area string, apiKey string, artistSlice []Artist, c chan []Concert) {
-	c <- getConcerts(area, apiKey, artistSlice)
+func ReadConcertsInAreaByUser(area string, apiKey string, artistSlice []artistutils.Artist, c chan []Concert) {
+	c <- GetConcerts(area, apiKey, artistSlice)
 }
 
-func getConcerts(area string, apiKey string, artistSlice []Artist) []Concert {
+func GetConcerts(area string, apiKey string, artistSlice []artistutils.Artist) []Concert {
 	c := make(chan []byte)
 
 	count := 0
 	for i := 0; i < 20; i++ {
-		go requestConcertsInArea(area, apiKey, strconv.Itoa(i), c)
+		go RequestConcertsInArea(area, apiKey, strconv.Itoa(i), c)
 		count++
 	}
 
@@ -75,37 +75,31 @@ func getConcerts(area string, apiKey string, artistSlice []Artist) []Concert {
 		json.Unmarshal([]byte(response), &jsonResponse)
 
 		for _, event := range jsonResponse.ResultsPage.Results.Event {
-			var concert Concert
-
 			for _, artist := range artistSlice {
 				addConcert := false
+				var bandName string
 
 				for _, performance := range event.Performance {
-					if !isBandAlreadyInSlice(concertArray, performance.Artist) && strings.EqualFold(artist.Name, performance.Artist) {
+					if !IsBandAlreadyInSlice(concertArray, performance.Artist) && strings.EqualFold(artist.Name, performance.Artist) {
 						addConcert = true
 					}
 
 					if addConcert {
-						concert.Artist = performance.Artist
+						bandName = performance.Artist
 						break
 					}
 				}
 
 				if addConcert {
-					concert.City = event.Location.City
-
 					t, err := time.Parse("2006-01-02", event.Start.Date)
 
 					if err != nil {
-						fmt.Println(err)
-					} else {
-						concert.Date = t
-						// concert.Date = t.In(time.Local).Format("January 02, 2006 (MST)")
+						log.Println(err)
+						break
 					}
 
-					concert.Event = event.Name
-					concert.Venue = event.Venue.Name
-					concertArray = append(concertArray, concert)
+					concert := CreateConcert(event.Name, t, bandName, event.Venue.Name, event.Location.City)
+					concertArray = append(concertArray, *concert)
 				}
 			}
 		}
