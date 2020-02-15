@@ -18,7 +18,7 @@ func main() {
 	r.Use(cors.Default())
 	r.GET("/concerts/:area/:user", func(c *gin.Context) {
 		artists := artistutils.GetMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
-		concerts := concertutils.ReadConcertsInArea(c.Param("area"), songKickAPIKey, artists)
+		concerts := concertutils.GetConcertsInOneArea(c.Param("area"), songKickAPIKey, artists)
 
 		sort.Slice(concerts, func(i, j int) bool {
 			return concerts[i].Date.Before(concerts[j].Date)
@@ -32,7 +32,7 @@ func main() {
 		//TODO Read this from file or database
 		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
-		concerts := concertutils.GetConcertsForUser(skAreaSlice, songKickAPIKey, artists)
+		concerts := concertutils.GetConcertsInMultipleAreas(skAreaSlice, songKickAPIKey, artists)
 
 		sort.Slice(concerts, func(i, j int) bool {
 			return concerts[i].Date.Before(concerts[j].Date)
@@ -47,8 +47,8 @@ func main() {
 		//TODO Read this from file or database
 		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
-		allConcerts := concertutils.GetConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser1)
-		concertsSecondUser := concertutils.GetConcertsForUser(skAreaSlice, songKickAPIKey, artistsUser2)
+		allConcerts := concertutils.GetConcertsInMultipleAreas(skAreaSlice, songKickAPIKey, artistsUser1)
+		concertsSecondUser := concertutils.GetConcertsInMultipleAreas(skAreaSlice, songKickAPIKey, artistsUser2)
 
 		allConcerts = concertutils.RemoveDuplicateEvents(allConcerts, concertsSecondUser)
 

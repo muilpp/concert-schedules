@@ -1,7 +1,6 @@
 package concertutils
 
 import (
-	"concert-schedules/artistutils"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -20,7 +19,7 @@ func IsBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
 }
 
 func GetSongKickAPIKey() string {
-	bs, err := ioutil.ReadFile("SongKickApiKey.txt")
+	bs, err := ioutil.ReadFile("keys/SongKickApiKey.txt")
 
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -31,7 +30,7 @@ func GetSongKickAPIKey() string {
 }
 
 func GetLastFMAPIKey() string {
-	bs, err := ioutil.ReadFile("LastFMApiKey.txt")
+	bs, err := ioutil.ReadFile("keys/LastFMApiKey.txt")
 
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -39,26 +38,6 @@ func GetLastFMAPIKey() string {
 	}
 
 	return strings.TrimSpace(string(bs))
-}
-
-func GetConcertsForUser(skAreaSlice []string, songKickAPIKey string, artists []artistutils.Artist) []Concert {
-	concertChannel := make(chan []Concert)
-	for _, skArea := range skAreaSlice {
-		go ReadConcertsInAreaByUser(skArea, songKickAPIKey, artists, concertChannel)
-	}
-
-	var concerts []Concert
-	for i := 0; i < len(skAreaSlice); i++ {
-		newConcerts := <-concertChannel
-
-		for _, concert := range newConcerts {
-			if !IsBandAlreadyInSlice(concerts, concert.Artist) {
-				concerts = append(concerts, concert)
-			}
-		}
-	}
-
-	return concerts
 }
 
 func RemoveDuplicateEvents(concerts []Concert, concertsToAdd []Concert) []Concert {
