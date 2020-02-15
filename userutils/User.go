@@ -1,6 +1,7 @@
-package artistutils
+package userutils
 
 import (
+	"concert-schedules/artistutils"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -8,14 +9,22 @@ import (
 	"net/url"
 )
 
-func GetMostListenedArtists(user string, apiKey string, limit string) []Artist {
+type User struct {
+	userName string
+}
+
+func CreateNewUser(userName string) *User {
+	return &User{userName: userName}
+}
+
+func (user User) GetMostListenedArtists(apiKey string, limit string) []artistutils.Artist {
 	client := http.Client{}
 
 	URL, err := url.Parse("http://ws.audioscrobbler.com")
 	URL.Path += "/2.0/"
 	parameters := url.Values{}
 	parameters.Add("method", "user.gettopartists")
-	parameters.Add("user", user)
+	parameters.Add("user", user.userName)
 	parameters.Add("api_key", apiKey)
 	parameters.Add("format", "json")
 	parameters.Add("limit", limit)
@@ -41,7 +50,7 @@ func GetMostListenedArtists(user string, apiKey string, limit string) []Artist {
 		log.Fatal("Error reading response")
 	}
 
-	var artistDTO ArtistDTO
+	var artistDTO artistutils.ArtistDTO
 	json.Unmarshal([]byte(response), &artistDTO)
 
 	return artistDTO.Topartists.Artist

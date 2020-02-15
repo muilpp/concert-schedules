@@ -3,6 +3,7 @@ package main
 import (
 	"concert-schedules/artistutils"
 	"concert-schedules/concertutils"
+	"concert-schedules/userutils"
 	"net/http"
 	"sort"
 
@@ -17,7 +18,8 @@ func main() {
 	r := gin.Default()
 	r.Use(cors.Default())
 	r.GET("/concerts/:area/:user", func(c *gin.Context) {
-		artists := artistutils.GetMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
+		user := userutils.CreateNewUser(c.Param("user"))
+		artists := user.GetMostListenedArtists(lastFMAPIKey, c.Query("limit"))
 		concerts := concertutils.GetConcertsInOneArea(c.Param("area"), songKickAPIKey, artists)
 
 		sort.Slice(concerts, func(i, j int) bool {
