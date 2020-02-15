@@ -1,7 +1,6 @@
 package main
 
 import (
-	"concert-schedules/artistutils"
 	"concert-schedules/concertutils"
 	"concert-schedules/userutils"
 	"net/http"
@@ -30,7 +29,8 @@ func main() {
 	})
 
 	r.GET("/allConcerts/:user", func(c *gin.Context) {
-		artists := artistutils.GetMostListenedArtists(c.Param("user"), lastFMAPIKey, c.Query("limit"))
+		user := userutils.CreateNewUser(c.Param("user"))
+		artists := user.GetMostListenedArtists(lastFMAPIKey, c.Query("limit"))
 		//TODO Read this from file or database
 		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
@@ -44,8 +44,10 @@ func main() {
 	})
 
 	r.GET("/allConcertsAllUsers/:user1/:user2", func(c *gin.Context) {
-		artistsUser1 := artistutils.GetMostListenedArtists(c.Param("user1"), lastFMAPIKey, c.Query("limit"))
-		artistsUser2 := artistutils.GetMostListenedArtists(c.Param("user2"), lastFMAPIKey, c.Query("limit"))
+		user1 := userutils.CreateNewUser(c.Param("user1"))
+		user2 := userutils.CreateNewUser(c.Param("user2"))
+		artistsUser1 := user1.GetMostListenedArtists(lastFMAPIKey, c.Query("limit"))
+		artistsUser2 := user2.GetMostListenedArtists(lastFMAPIKey, c.Query("limit"))
 		//TODO Read this from file or database
 		skAreaSlice := []string{"28714", "28480", "28539", "28604", "28540", "56332", "28796"}
 
