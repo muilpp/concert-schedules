@@ -5,6 +5,11 @@ import (
 	"io/ioutil"
 	"os"
 	"strings"
+	"unicode"
+
+	"golang.org/x/text/runes"
+	"golang.org/x/text/transform"
+	"golang.org/x/text/unicode/norm"
 )
 
 func IsBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
@@ -55,4 +60,11 @@ func RemoveDuplicateEvents(concerts []Concert, concertsToAdd []Concert) []Concer
 	}
 
 	return concerts
+}
+
+func RemoveAccents(word string) string {
+	t := transform.Chain(norm.NFD, runes.Remove(runes.In(unicode.Mn)), norm.NFC)
+	s, _, _ := transform.String(t, word)
+
+	return s
 }
