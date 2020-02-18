@@ -2,6 +2,7 @@ package userutils
 
 import (
 	"concert-schedules/artistutils"
+	"concert-schedules/concertutils"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -53,5 +54,11 @@ func (user User) GetMostListenedArtists(apiKey string, limit string) []artistuti
 	var artistDTO artistutils.ArtistDTO
 	json.Unmarshal([]byte(response), &artistDTO)
 
-	return artistDTO.Topartists.Artist
+	var artistSlice []artistutils.Artist
+	for _, artist := range artistDTO.Topartists.Artist {
+		artist.Name = concertutils.RemoveAccents(artist.Name)
+		artistSlice = append(artistSlice, artist)
+	}
+
+	return artistSlice
 }

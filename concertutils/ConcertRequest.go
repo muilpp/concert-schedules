@@ -34,20 +34,24 @@ func GetConcertsInOneArea(area string, apiKey string, artistSlice []artistutils.
 		json.Unmarshal([]byte(response), &jsonResponse)
 
 		for _, event := range jsonResponse.ResultsPage.Results.Event {
+
+			var performanceSlice []Performance
+			for _, performance := range event.Performance {
+				performance.Artist = RemoveAccents(performance.Artist)
+				performanceSlice = append(performanceSlice, performance)
+			}
+
 			for _, artist := range artistSlice {
-				artistName := RemoveAccents(artist.Name)
 				addConcert := false
 				var bandName string
 
-				for _, performance := range event.Performance {
-
-					performanceArtist := RemoveAccents(performance.Artist)
-					if strings.EqualFold(artistName, performanceArtist) && !IsBandAlreadyInSlice(concertArray, performanceArtist) {
+				for _, performance := range performanceSlice {
+					if strings.EqualFold(artist.Name, performance.Artist) && !IsBandAlreadyInSlice(concertArray, performance.Artist) {
 						addConcert = true
 					}
 
 					if addConcert {
-						bandName = performanceArtist
+						bandName = performance.Artist
 						break
 					}
 				}
