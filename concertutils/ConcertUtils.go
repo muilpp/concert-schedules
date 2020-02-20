@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"unicode"
 
@@ -24,7 +26,9 @@ func IsBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
 }
 
 func GetSongKickAPIKey() string {
-	bs, err := ioutil.ReadFile("keys/SongKickApiKey.txt")
+	_, b, _, _ := runtime.Caller(0)
+	root := filepath.Join(filepath.Dir(b), "../")
+	bs, err := ioutil.ReadFile(root + "/keys/SongKickApiKey.txt")
 
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -35,7 +39,9 @@ func GetSongKickAPIKey() string {
 }
 
 func GetLastFMAPIKey() string {
-	bs, err := ioutil.ReadFile("keys/LastFMApiKey.txt")
+	_, b, _, _ := runtime.Caller(0)
+	root := filepath.Join(filepath.Dir(b), "../")
+	bs, err := ioutil.ReadFile(root + "/keys/LastFMApiKey.txt")
 
 	if err != nil {
 		fmt.Println("Error:", err)

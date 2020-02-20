@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestFindsRepeatedBandAlreadyInSlice(t *testing.T) {
+func TestIsBandAlreadyInSliceWhenFound(t *testing.T) {
 	var concertSlice []Concert
 
 	concert := CreateConcert("Event", time.Now(), "artist", "venue", "city")
@@ -18,7 +18,7 @@ func TestFindsRepeatedBandAlreadyInSlice(t *testing.T) {
 	}
 }
 
-func TestDoesNotFindBandInSlice(t *testing.T) {
+func TestIsBandAlreadyInSliceWhenNotFound(t *testing.T) {
 	var concertSlice []Concert
 
 	concert := CreateConcert("Event", time.Now(), "artist", "venue", "city")
@@ -30,7 +30,7 @@ func TestDoesNotFindBandInSlice(t *testing.T) {
 	}
 }
 
-func TestDuplicatedEventsAreRemoved(t *testing.T) {
+func TestRemoveDuplicateEvents(t *testing.T) {
 	var concertSlice []Concert
 	concertSlice = append(concertSlice, *CreateConcert("Event", time.Now(), "artist1", "venue", "city"))
 	concertSlice = append(concertSlice, *CreateConcert("Event", time.Now(), "artist2", "venue", "city"))
@@ -49,10 +49,26 @@ func TestDuplicatedEventsAreRemoved(t *testing.T) {
 	}
 }
 
-func TestSpecialCharactersAreRemovedFromBandName(t *testing.T) {
+func TestRemoveAccents(t *testing.T) {
 	word := RemoveAccents("Bonć diáàñ!")
 
 	if !strings.Contains(word, "Bonc diaan") {
 		t.Errorf("No special characters expected, but %v found", word)
+	}
+}
+
+func TestGetSongKickAPIKey(t *testing.T) {
+	key := GetSongKickAPIKey()
+
+	if len(key) == 0 {
+		t.Errorf("Expected to find songkick API key, but nothing found")
+	}
+}
+
+func TestGetLastFMAPIKey(t *testing.T) {
+	key := GetLastFMAPIKey()
+
+	if len(key) == 0 {
+		t.Errorf("Expected to find lastFM API key, but nothing found")
 	}
 }
