@@ -1,7 +1,6 @@
 package concertutils
 
 import (
-	"concert-schedules/artistutils"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -10,6 +9,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/marc/concerts/artistutils"
 )
 
 func GetConcertsInOneArea(area string, apiKey string, artistSlice []artistutils.Artist) []Concert {

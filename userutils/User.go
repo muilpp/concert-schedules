@@ -1,13 +1,14 @@
 package userutils
 
 import (
-	"concert-schedules/artistutils"
-	"concert-schedules/concertutils"
 	"encoding/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/marc/concerts/artistutils"
+	"github.com/marc/concerts/concertutils"
 )
 
 type User struct {

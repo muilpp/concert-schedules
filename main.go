@@ -1,10 +1,12 @@
 package main
 
 import (
-	"concert-schedules/concertutils"
-	"concert-schedules/userutils"
 	"net/http"
 	"sort"
+
+	"github.com/marc/concerts/userutils"
+
+	"github.com/marc/concerts/concertutils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"

@@ -1,8 +1,9 @@
 package concertutils
 
 import (
-	"concert-schedules/artistutils"
 	"testing"
+
+	"github.com/marc/concerts/artistutils"
 )
 
 func TestGetConcertsInMultipleAreas(t *testing.T) {

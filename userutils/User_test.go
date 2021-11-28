@@ -1,10 +1,11 @@
 package userutils
 
 import (
-	"concert-schedules/concertutils"
 	"io/ioutil"
 	"strings"
 	"testing"
+
+	"github.com/marc/concerts/concertutils"
 )
 
 func TestGetMostListenedArtists(t *testing.T) {
