@@ -1,6 +1,6 @@
 FROM golang:latest
 
-MAINTAINER Marc Pratllusà "muilpp@gmail.com"
+LABEL maintainer="muilpp@gmail.com"
 
 WORKDIR /usr/src/concerts
 EXPOSE 8282

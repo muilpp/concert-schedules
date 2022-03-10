@@ -1,11 +1,6 @@
 package concertutils
 
 import (
-	"fmt"
-	"io/ioutil"
-	"os"
-	"path/filepath"
-	"runtime"
 	"strings"
 	"unicode"
 
@@ -23,32 +18,6 @@ func IsBandAlreadyInSlice(concertSlice []Concert, bandName string) bool {
 	}
 
 	return false
-}
-
-func GetSongKickAPIKey() string {
-	_, b, _, _ := runtime.Caller(0)
-	root := filepath.Join(filepath.Dir(b), "../")
-	bs, err := ioutil.ReadFile(root + "/keys/SongKickApiKey.txt")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
-	}
-
-	return strings.TrimSpace(string(bs))
-}
-
-func GetLastFMAPIKey() string {
-	_, b, _, _ := runtime.Caller(0)
-	root := filepath.Join(filepath.Dir(b), "../")
-	bs, err := ioutil.ReadFile(root + "/keys/LastFMApiKey.txt")
-
-	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
-	}
-
-	return strings.TrimSpace(string(bs))
 }
 
 func RemoveDuplicateEvents(concerts []Concert, concertsToAdd []Concert) []Concert {

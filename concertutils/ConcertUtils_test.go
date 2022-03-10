@@ -56,19 +56,3 @@ func TestRemoveAccents(t *testing.T) {
 		t.Errorf("No special characters expected, but %v found", word)
 	}
 }
-
-func TestGetSongKickAPIKey(t *testing.T) {
-	key := GetSongKickAPIKey()
-
-	if len(key) == 0 {
-		t.Errorf("Expected to find songkick API key, but nothing found")
-	}
-}
-
-func TestGetLastFMAPIKey(t *testing.T) {
-	key := GetLastFMAPIKey()
-
-	if len(key) == 0 {
-		t.Errorf("Expected to find lastFM API key, but nothing found")
-	}
-}
