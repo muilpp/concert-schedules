@@ -11,6 +11,6 @@ deploy:
 run:
 	test compile
 	pwd
-	cd .. && ./bin/concerts
+	./bin/concerts
 
 all: test compile
